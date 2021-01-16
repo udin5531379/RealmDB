@@ -8,39 +8,48 @@
 import SwiftUI
 
 struct AddPageView: View {
-    @EnvironmentObject var modeldata : DBViewModel
+    @EnvironmentObject var modelData : DBViewModel
+    @Environment(\.presentationMode) var presentation
+    
     var body: some View {
+        
+        // To Get Form Like View...
         NavigationView{
+            
             List{
+                
                 Section(header: Text("Title")) {
-                    TextField("", text: $modeldata.title)
+                    
+                    TextField("", text: $modelData.title)
                 }
                 
-                Section(header: Text("Details")) {
-                    TextField("", text: $modeldata.detail)
+                Section(header: Text("Detail")) {
+                    
+                    TextField("", text: $modelData.detail)
                 }
             }
             .listStyle(GroupedListStyle())
-            .navigationTitle("Add Your Details")
+            .navigationTitle(modelData.updateObject == nil ? "Add Data" : "Update")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
+                
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(action: {
-                        modeldata.addData()
-                        modeldata.openNewPage.toggle()
-                    }, label: {
+                    
+                    Button(action: {modelData.addData(presentation: presentation)}, label: {
                         Text("Done")
                     })
                 }
                 
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Button(action: {modeldata.openNewPage.toggle()}, label: {
+                    
+                    Button(action: {presentation.wrappedValue.dismiss()}, label: {
                         Text("Cancel")
                     })
                 }
             }
         }
-        
+        .onAppear(perform: modelData.setUpInitialData)
+        .onDisappear(perform: modelData.deInit)
     }
 }
 

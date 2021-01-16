@@ -23,7 +23,22 @@ struct Home: View {
                         }.frame(maxWidth: .infinity, alignment: .leading)
                         .padding()
                         .background(Color.gray.opacity(0.15))
-                    }
+                        .cornerRadius(15)
+                        .contentShape(RoundedRectangle(cornerRadius: 10))
+                        .contextMenu(ContextMenu(menuItems: {
+                            Button(action: {modelData.deleteData(object: md)}, label: {
+                                Text("Delete Item")
+                            })
+                            
+                            Button(action: {
+                                modelData.updateObject = md
+                                modelData.openNewPage.toggle()
+                            }, label: {
+                                Text("Update Item")
+                            })
+                        }))
+                        
+                    }.padding(.horizontal)
                 }
                 
             }
